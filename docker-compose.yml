@@ -1,0 +1,34 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: 'apartments'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'admin'
+    volumes:
+      - ./backend/database/data.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+  server:
+    image: node
+    container_name: server
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+  client:
+    build: frontend
+    image: node
+    volumes:
+      - '/app/node_modules'
+    restart: always
+    container_name: client
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
