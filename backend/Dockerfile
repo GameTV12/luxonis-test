@@ -2,16 +2,17 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
-ENV PATH /app/node_modules/.bin:$PATH
-
 COPY package*.json ./
 
-RUN npm i
+RUN npm install
 
 COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
+COPY .env ./dist/
+WORKDIR ./dist
 
-CMD ["npm", "run", "start"]
+EXPOSE 8000
+
+CMD npm start
